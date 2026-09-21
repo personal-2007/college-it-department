@@ -22,7 +22,7 @@ export default function Login() {
       else if (response.role === 'faculty') navigate('/faculty/dashboard');
       else navigate('/student/dashboard');
     } catch (err) {
-      const message = err?.response?.data?.message;
+      const message = err?.message;
       setError(message === 'Invalid login credentials' ? 'Invalid email or password. Please try again.' : (message || 'Unable to connect to Supabase. Please try again later.'));
     } finally {
       setLoading(false);

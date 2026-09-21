@@ -1,19 +1,20 @@
 import { supabase } from '../utils/supabase';
 
 export const fetchTests = async (filters = {}) => {
-  let query = supabase.from('tests').select('*, test_questions(question_order, questions(*))').order('created_at', { ascending: false });
+  let query = supabase.from('tests').select('*').order('created_at', { ascending: false });
   for (const [column, value] of Object.entries(filters)) {
     if (value && !String(value).startsWith('All ') && value !== 'Mixed' && column !== 'limit') query = query.eq(column, value);
   }
   const { data, error } = await query;
   if (error) throw error;
-  return data.map(normalizeTest);
+  return attachStudentQuestions(data);
 };
 
 export const fetchTestById = async (id) => {
-  const { data, error } = await supabase.from('tests').select('*, test_questions(question_order, questions(*))').eq('id', id).single();
+  const { data, error } = await supabase.from('tests').select('*').eq('id', id).single();
   if (error) throw error;
-  return normalizeTest(data);
+  const [test] = await attachStudentQuestions([data]);
+  return test;
 };
 
 export const generateTest = async (payload) => {
@@ -23,6 +24,11 @@ export const generateTest = async (payload) => {
   const { error: relationError } = await supabase.from('test_questions').insert(questions.map((question, index) => ({ test_id: test.id, question_id: question.id, question_order: index })));
   if (relationError) throw relationError;
   return fetchTestById(test.id);
+};
+
+export const deleteTest = async (id) => {
+  const { error } = await supabase.from('tests').delete().eq('id', id);
+  if (error) throw error;
 };
 
 export const submitTest = async (payload) => {
@@ -52,8 +58,24 @@ async function fetchQuestionsForTest(filters) {
   return data;
 }
 
+async function attachStudentQuestions(tests) {
+  if (!tests.length) return [];
+
+  const { data: questionRows, error } = await supabase.rpc('get_student_test_questions', {
+    p_test_ids: tests.map((test) => test.id),
+  });
+  if (error) throw error;
+
+  return tests.map((test) => normalizeTest({
+    ...test,
+    test_questions: questionRows
+      .filter((question) => question.test_id === test.id)
+      .map((question) => ({ question_order: question.question_order, questions: question })),
+  }));
+}
+
 function normalizeTest(test) {
-  const questions = (test.test_questions || []).sort((a, b) => a.question_order - b.question_order).map((item) => ({ ...item.questions, _id: item.questions.id, options: [item.questions.option_a, item.questions.option_b, item.questions.option_c, item.questions.option_d], correctAnswer: item.questions.correct_answer }));
+  const questions = (test.test_questions || []).sort((a, b) => a.question_order - b.question_order).map((item) => ({ ...item.questions, _id: item.questions.question_id || item.questions.id, options: [item.questions.option_a, item.questions.option_b, item.questions.option_c, item.questions.option_d] }));
   return { ...test, _id: test.id, duration: test.duration, totalMarks: test.total_marks, questions };
 }
 

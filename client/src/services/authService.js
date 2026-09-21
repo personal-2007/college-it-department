@@ -24,6 +24,18 @@ export const loginUser = async (payload) => {
   return { user: data.user, session: data.session };
 };
 
+export const requestPasswordReset = async (email) => {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+  if (error) throw error;
+};
+
+export const updatePassword = async (password) => {
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw error;
+};
+
 export const getProfile = async (userId) => {
   const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
   if (error) throw error;

@@ -1,40 +1,42 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { TestProvider } from './context/TestContext';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Layout from './components/Layout/Layout';
-import Home from './pages/Home';
-import About from './pages/About';
-import Faculty from './pages/Faculty';
-import Academics from './pages/Academics';
-import Labs from './pages/Labs';
-import MCQTest from './pages/MCQTest';
-import TestInstructions from './pages/TestInstructions';
-import StartTest from './pages/StartTest';
-import TestPage from './pages/TestPage';
-import TestResult from './pages/TestResult';
-import TestHistory from './pages/TestHistory';
-import StudentDashboard from './pages/StudentDashboard';
-import Timetable from './pages/Timetable';
-import Placement from './pages/Placement';
-import Events from './pages/Events';
-import StudyMaterials from './pages/StudyMaterials';
-import Gallery from './pages/Gallery';
-import Contact from './pages/Contact';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import Unauthorized from './pages/Unauthorized';
-import NotFound from './pages/NotFound';
-import AdminDashboard from './admin/AdminDashboard';
-import ManageQuestions from './admin/ManageQuestions';
-import AddQuestion from './admin/AddQuestion';
-import ManageTests from './admin/ManageTests';
-import StudentAttempts from './admin/StudentAttempts';
-import ManageFaculty from './admin/ManageFaculty';
-import ManageEvents from './admin/ManageEvents';
-import ManageMaterials from './admin/ManageMaterials';
-import FacultyDashboard from './faculty/FacultyDashboard';
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Faculty = lazy(() => import('./pages/Faculty'));
+const Academics = lazy(() => import('./pages/Academics'));
+const Labs = lazy(() => import('./pages/Labs'));
+const MCQTest = lazy(() => import('./pages/MCQTest'));
+const TestInstructions = lazy(() => import('./pages/TestInstructions'));
+const StartTest = lazy(() => import('./pages/StartTest'));
+const TestPage = lazy(() => import('./pages/TestPage'));
+const TestResult = lazy(() => import('./pages/TestResult'));
+const TestHistory = lazy(() => import('./pages/TestHistory'));
+const StudentDashboard = lazy(() => import('./pages/StudentDashboard'));
+const Timetable = lazy(() => import('./pages/Timetable'));
+const Placement = lazy(() => import('./pages/Placement'));
+const Events = lazy(() => import('./pages/Events'));
+const StudyMaterials = lazy(() => import('./pages/StudyMaterials'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Unauthorized = lazy(() => import('./pages/Unauthorized'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
+const ManageQuestions = lazy(() => import('./admin/ManageQuestions'));
+const AddQuestion = lazy(() => import('./admin/AddQuestion'));
+const ManageTests = lazy(() => import('./admin/ManageTests'));
+const StudentAttempts = lazy(() => import('./admin/StudentAttempts'));
+const ManageFaculty = lazy(() => import('./admin/ManageFaculty'));
+const ManageEvents = lazy(() => import('./admin/ManageEvents'));
+const ManageMaterials = lazy(() => import('./admin/ManageMaterials'));
+const FacultyDashboard = lazy(() => import('./faculty/FacultyDashboard'));
 
 function RootRedirect() {
   const { user, loading } = useAuth();
@@ -62,11 +64,13 @@ function RootRedirect() {
 
 function ProtectedApp() {
   return (
-    <Routes>
+    <Suspense fallback={<PageLoading />}>
+      <Routes>
       <Route path="/" element={<RootRedirect />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
       <Route element={<Layout />}>
@@ -116,8 +120,13 @@ function ProtectedApp() {
         <Route path="/contact" element={<ProtectedRoute allowedRoles={['student']}><Contact /></ProtectedRoute>} />
       </Route>
       <Route path="*" element={<NotFound />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   );
+}
+
+function PageLoading() {
+  return <div className="flex min-h-screen items-center justify-center bg-slate-50"><p className="text-sm font-semibold text-slate-600">Loading...</p></div>;
 }
 
 function App() {

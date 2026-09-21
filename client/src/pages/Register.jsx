@@ -44,7 +44,7 @@ export default function Register() {
       if (result.requiresEmailConfirmation) setError('Check your email to confirm your account before signing in.');
       else navigate('/student/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }

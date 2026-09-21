@@ -13,8 +13,14 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let mounted = true;
     const loadSession = async () => {
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const { data: { session: currentSession }, error } = await supabase.auth.getSession();
       if (!mounted) return;
+      if (error) {
+        setSession(null);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
       setSession(currentSession);
       if (currentSession?.user) {
         try { setUser(await getProfile(currentSession.user.id)); } catch { setUser(null); }
@@ -50,8 +56,8 @@ export function AuthProvider({ children }) {
     return profile;
   };
 
-  const logout = () => {
-    supabase.auth.signOut();
+  const logout = async () => {
+    await supabase.auth.signOut();
     setSession(null);
     setUser(null);
   };
