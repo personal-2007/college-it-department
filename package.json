@@ -8,5 +8,7 @@
     "build": "npm --prefix client run build",
     "lint": "npm --prefix client run lint"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@supabase/server": "^1.7.1"
+  }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ArrowUpRight, Check, Eye, EyeOff, Fingerprint, Lock, Sparkles, User } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { ArrowUpRight, Check, Eye, EyeOff, Fingerprint, Lock, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -48,10 +48,6 @@ export default function Login() {
             </div>
 
             <div className="my-auto max-w-xl py-16">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-300/20 bg-violet-300/10 px-3 py-1.5 text-xs font-medium text-violet-200">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>THE DIGITAL CAMPUS</span>
-              </div>
               <h1 className="max-w-lg text-5xl font-bold leading-[1.03] tracking-tight sm:text-6xl">Shape the future of <span className="login-gradient-text">technology.</span></h1>
               <p className="mt-6 max-w-md text-base leading-7 text-slate-400">One intelligent space for learning, assessment and the ideas that move your department forward.</p>
               <div className="mt-10 flex flex-wrap gap-3 text-xs text-slate-300">
@@ -113,7 +109,6 @@ export default function Login() {
                   <input type="checkbox" className="login-checkbox" />
                   Remember Me
                 </label>
-                <Link to="/forgot-password" className="font-medium text-violet-300 transition hover:text-cyan-300">Forgot Password?</Link>
               </div>
 
               {error && <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">{error}</p>}
@@ -122,7 +117,6 @@ export default function Login() {
                 {loading ? 'SIGNING IN...' : 'LOGIN'} <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </button>
             </form>
-            <p className="mt-7 text-center text-xs text-slate-500">Don't have an account? <Link to="/register" className="font-semibold text-violet-300 transition hover:text-cyan-300">Sign Up</Link></p>
           </div>
         </section>
       </div>
