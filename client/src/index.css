@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', sans-serif;
+  color: #172554;
+  background: #f8fafc;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #f8fbff 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.transition-smooth {
+  transition: all 0.25s ease;
+}
+
+.card-shadow {
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.section-shell {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.gradient-button {
+  @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primaryBlue to-skyBlue px-5 py-3 font-semibold text-white shadow-soft transition hover:scale-[1.01] hover:shadow-lg;
+}
+
+.panel {
+  @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-primaryBlue;
+}
+
+.login-shell {
+  position: relative;
+  overflow: hidden;
+  background: #050714;
+  color: #fff;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+.login-shell::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(111, 76, 255, 0.06) 45%, transparent 70%);
+  content: '';
+  pointer-events: none;
+}
+
+.login-aurora {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.login-aurora-one { top: -12rem; left: 8%; width: 26rem; height: 26rem; background: #5b21b6; animation: login-drift 11s ease-in-out infinite; }
+.login-aurora-two { right: 3%; bottom: -14rem; width: 30rem; height: 30rem; background: #075985; animation: login-drift 14s ease-in-out infinite reverse; }
+
+.login-grid {
+  background-image: linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(135deg, #000, transparent 75%);
+}
+
+.login-gradient-text { background: linear-gradient(100deg, #c4b5fd, #67e8f9); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.login-card { animation: login-rise 0.7s ease-out both; }
+.login-submit { box-shadow: 0 12px 28px rgba(79, 70, 229, 0.3); }
+.login-submit:hover { box-shadow: 0 16px 34px rgba(96, 165, 250, 0.3); transform: translateY(-2px); }
+.login-submit:active { transform: translateY(0); }
+.login-checkbox { height: 1rem; width: 1rem; appearance: none; border: 1px solid rgba(196, 181, 253, 0.35); border-radius: 0.3rem; background: rgba(0, 0, 0, 0.2); transition: 0.2s ease; }
+.login-checkbox:checked { border-color: #a78bfa; background: #7c3aed; box-shadow: 0 0 14px rgba(139, 92, 246, 0.5); }
+.login-checkbox:checked::after { display: block; width: 4px; height: 8px; margin: 1px 0 0 4px; border: solid white; border-width: 0 2px 2px 0; content: ''; transform: rotate(45deg); }
+
+@keyframes login-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes login-drift { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(24px, 18px) scale(1.08); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .login-card, .login-aurora { animation: none; }
+  .login-submit { transition: none; }
+}

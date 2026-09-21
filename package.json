@@ -1,0 +1,12 @@
+{
+  "name": "college-it-department",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "client": "npm --prefix client run dev",
+    "dev": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "lint": "npm --prefix client run lint"
+  },
+  "dependencies": {}
+}
