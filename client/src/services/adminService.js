@@ -1,20 +1,45 @@
 import { supabase } from '../utils/supabase';
 
 export async function fetchAdminStats() {
-  const tables = ['profiles', 'questions', 'tests', 'test_attempts'];
-  const counts = await Promise.all(tables.map(async (table) => {
-    const { count, error } = await supabase.from(table).select('*', { count: 'exact', head: true });
-    if (error) throw error;
-    return count || 0;
-  }));
-  const { data: scores, error } = await supabase.from('test_attempts').select('percentage');
-  if (error) throw error;
+  const [
+    { count: totalStudents, error: studentsError },
+    { count: totalFaculty, error: facultyError },
+    { count: totalAdmins, error: adminsError },
+    { count: totalQuestions, error: questionsError },
+    { count: totalTests, error: testsError },
+    { count: totalAttempts, error: attemptsError },
+    { data: scores, error: scoresError },
+  ] = await Promise.all([
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'faculty'),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'admin'),
+    supabase.from('questions').select('*', { count: 'exact', head: true }),
+    supabase.from('tests').select('*', { count: 'exact', head: true }),
+    supabase.from('test_attempts').select('*', { count: 'exact', head: true }),
+    supabase.from('test_attempts').select('percentage'),
+  ]);
+
+  if (studentsError) throw studentsError;
+  if (facultyError) throw facultyError;
+  if (adminsError) throw adminsError;
+  if (questionsError) throw questionsError;
+  if (testsError) throw testsError;
+  if (attemptsError) throw attemptsError;
+  if (scoresError) throw scoresError;
+
+  const averageScore = scores.length
+    ? Math.round(scores.reduce((sum, item) => sum + Number(item.percentage || 0), 0) / scores.length)
+    : 0;
+
   return {
-    totalStudents: counts[0],
-    totalQuestions: counts[1],
-    totalTests: counts[2],
-    testsAttempted: counts[3],
-    averageScore: scores.length ? Math.round(scores.reduce((sum, item) => sum + item.percentage, 0) / scores.length) : 0,
+    totalStudents: totalStudents || 0,
+    totalFaculty: totalFaculty || 0,
+    totalAdmins: totalAdmins || 0,
+    totalQuestions: totalQuestions || 0,
+    totalTests: totalTests || 0,
+    totalAttempts: totalAttempts || 0,
+    averageScore,
+    activeTests: totalTests || 0,
   };
 }
 
@@ -28,11 +53,23 @@ export async function fetchAttempts() {
 }
 
 export async function fetchFacultyStats() {
-  const tables = ['questions', 'tests', 'test_attempts'];
-  const counts = await Promise.all(tables.map(async (table) => {
-    const { count, error } = await supabase.from(table).select('*', { count: 'exact', head: true });
-    if (error) throw error;
-    return count || 0;
-  }));
-  return { totalQuestions: counts[0], totalTests: counts[1], testsAttempted: counts[2] };
+  const [
+    { count: totalQuestions, error: questionsError },
+    { count: totalTests, error: testsError },
+    { count: totalAttempts, error: attemptsError },
+  ] = await Promise.all([
+    supabase.from('questions').select('*', { count: 'exact', head: true }),
+    supabase.from('tests').select('*', { count: 'exact', head: true }),
+    supabase.from('test_attempts').select('*', { count: 'exact', head: true }),
+  ]);
+
+  if (questionsError) throw questionsError;
+  if (testsError) throw testsError;
+  if (attemptsError) throw attemptsError;
+
+  return {
+    totalQuestions: totalQuestions || 0,
+    totalTests: totalTests || 0,
+    testsAttempted: totalAttempts || 0,
+  };
 }

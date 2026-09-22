@@ -2,10 +2,19 @@ import { useEffect, useState } from 'react';
 import { BarChart, Bar, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts';
 import { fetchAdminStats } from '../services/adminService';
 
-const colors = ['#2563EB', '#0EA5E9', '#7C3AED', '#16A34A', '#F59E0B'];
+const colors = ['#2563EB', '#0EA5E9', '#7C3AED', '#16A34A', '#F59E0B', '#DC2626', '#14B8A6', '#F97316'];
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ totalStudents: 0, totalQuestions: 0, totalTests: 0, testsAttempted: 0, averageScore: 0 });
+  const [stats, setStats] = useState({
+    totalStudents: 0,
+    totalFaculty: 0,
+    totalAdmins: 0,
+    totalQuestions: 0,
+    totalTests: 0,
+    totalAttempts: 0,
+    averageScore: 0,
+    activeTests: 0,
+  });
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -14,21 +23,26 @@ export default function AdminDashboard() {
 
   const chartData = [
     { name: 'Students', value: stats.totalStudents },
+    { name: 'Faculty', value: stats.totalFaculty },
+    { name: 'Admins', value: stats.totalAdmins },
     { name: 'Questions', value: stats.totalQuestions },
     { name: 'Tests', value: stats.totalTests },
-    { name: 'Attempts', value: stats.testsAttempted },
+    { name: 'Attempts', value: stats.totalAttempts },
   ];
 
   return (
     <div className="section-shell py-16">
       <h1 className="text-4xl font-bold text-slate-900">Admin Dashboard</h1>
       {error && <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-600">{error}</p>}
-      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         <Metric label="Total Students" value={stats.totalStudents} />
+        <Metric label="Total Faculty" value={stats.totalFaculty} />
+        <Metric label="Total Admins" value={stats.totalAdmins} />
         <Metric label="Total Questions" value={stats.totalQuestions} />
         <Metric label="Total Tests" value={stats.totalTests} />
-        <Metric label="Tests Attempted" value={stats.testsAttempted} />
+        <Metric label="Total Test Attempts" value={stats.totalAttempts} />
         <Metric label="Average Score" value={`${stats.averageScore}%`} />
+        <Metric label="Active Tests" value={stats.activeTests} />
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

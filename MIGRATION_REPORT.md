@@ -60,7 +60,7 @@ The Vite project root is `client/`. Configure these in `client/.env` or `client/
 
 ```env
 VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
+VITE_SUPABASE_PUBLISHABLE_KEY=
 ```
 
 The sanitized template is `client/.env.example`; local env files are ignored by Git. No service-role key is used in browser code.
