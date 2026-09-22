@@ -1,11 +1,18 @@
 import { Navigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function ProtectedRoute({ children, allowedRoles = [] }) {
   const { user, loading, isAuthenticated } = useAuth();
   const location = useLocation();
+  const [showLoader, setShowLoader] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading || showLoader) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="text-center">

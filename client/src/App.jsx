@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { TestProvider } from './context/TestContext';
@@ -36,12 +36,19 @@ const StudentAttempts = lazy(() => import('./admin/StudentAttempts'));
 const ManageFaculty = lazy(() => import('./admin/ManageFaculty'));
 const ManageEvents = lazy(() => import('./admin/ManageEvents'));
 const ManageMaterials = lazy(() => import('./admin/ManageMaterials'));
+const AdminSupport = lazy(() => import('./admin/AdminSupport'));
 const FacultyDashboard = lazy(() => import('./faculty/FacultyDashboard'));
 
 function RootRedirect() {
   const { user, loading } = useAuth();
+  const [showLoader, setShowLoader] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading || showLoader) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="text-center">
@@ -110,7 +117,8 @@ function ProtectedApp() {
         <Route path="/admin/faculty" element={<ProtectedRoute allowedRoles={['admin']}><ManageFaculty /></ProtectedRoute>} />
         <Route path="/admin/events" element={<ProtectedRoute allowedRoles={['admin']}><ManageEvents /></ProtectedRoute>} />
         <Route path="/admin/materials" element={<ProtectedRoute allowedRoles={['admin']}><ManageMaterials /></ProtectedRoute>} />
-        <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><ManageMaterials /></ProtectedRoute>} />
+        <Route path="/admin/support" element={<ProtectedRoute allowedRoles={['admin']}><AdminSupport /></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminSupport /></ProtectedRoute>} />
 
         <Route path="/timetable" element={<ProtectedRoute allowedRoles={['student']}><Timetable /></ProtectedRoute>} />
         <Route path="/placement" element={<ProtectedRoute allowedRoles={['student']}><Placement /></ProtectedRoute>} />

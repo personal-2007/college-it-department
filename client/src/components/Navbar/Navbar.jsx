@@ -22,19 +22,21 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md">
-      <div className="section-shell flex h-24 items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-slate-200">
+      <div className="section-shell flex h-24 items-center justify-between gap-3">
+        <Link to="/" className="flex min-w-0 items-center gap-3 pr-2 lg:pr-3">
+          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-slate-200 sm:h-14 sm:w-14">
             <img src="/college-logo.png" alt="Mahendra Engineering College logo" className="h-full w-full object-contain" />
           </div>
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.24em] text-blue-600">Mahendra Engineering College</p>
-            <p className="text-xs text-slate-500">Education • Discipline • Success</p>
-            <p className="mt-1 text-sm font-semibold text-slate-800">Department of Information Technology</p>
+
+          <div className="flex min-w-0 max-w-[270px] flex-col justify-center leading-none text-left sm:max-w-[300px] lg:max-w-[330px]">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-primaryBlue sm:text-[10px]">MAHENDRA ENGINEERING</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-primaryBlue sm:text-[10px]">COLLEGE</p>
+            <p className="mt-1 text-[9px] text-slate-500 sm:text-[10px]">Education • Discipline • Success</p>
+            <p className="mt-1 max-w-[230px] text-[10px] font-semibold text-slate-800 sm:text-[11px] lg:max-w-[260px]">Department of Information Technology</p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-2 lg:flex">
+        <nav className="hidden flex-1 items-center justify-center gap-2 lg:flex">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
